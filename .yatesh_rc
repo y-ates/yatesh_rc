@@ -18,6 +18,10 @@ rs() {
 	curl https://reverse-shell.sh/$1:$2
 }
 
+con_htb() {
+	sudo openvpn /home/y/Documents/HTB/lab_yakate.ovpn
+}
+
 htb-init() {
 	if [[ $1 ]]; then			
 		mkdir -p /home/y/Documents/HTB/$1/files
@@ -37,6 +41,37 @@ htb-init() {
 # Usage: nmap-full 10.10.11.169
 nmap-full() {
 	nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1
+}
+
+# add ip/domain to /etc/hosts. Usage: addhost <IP> <DOMAIN>
+addhost() {
+    if [ "$#" -ne 2 ]; then
+      echo "[i] Usage: addhost <ip> <hostname>"
+      return 1
+    fi
+
+    ip="$1"
+    hostname="$2"
+    if grep -q "^$ip" /etc/hosts; then
+      sudo sed -i "/^$ip/s/$/ $hostname/" /etc/hosts
+      echo "[+] Appended $hostname to existing entry for $ip in /etc/hosts"
+    else
+      echo "$ip $hostname" | sudo tee -a /etc/hosts > /dev/null
+      echo "[+] Added new entry: $ip $hostname to /etc/hosts"
+    fi
+
+    grep "^$ip" /etc/hosts
+}
+
+# NMAP UDP ONLY
+nmap_udp () {
+  if [ $# -eq 0 ]
+    then
+      echo "[i] Usage: nmap_udp ip (options)"
+    else
+      [ ! -d "./nmap" ] && echo "[i] Creating $(pwd)/nmap..." && mkdir nmap
+      sudo nmap -sUCV -T4 --min-rate 10000 "${@}" -v -oA nmap/udp_default
+  fi
 }
 
 # Usage: ffuf-dir http://site.com/FUZZ
@@ -62,6 +97,11 @@ st() {
     fi
     echo "Stablizing commands copied to the clipboard!"
     stty raw -echo;fg
+}
+
+# create folder and cd into it
+mcd() {
+  mkdir $1 && cd $_
 }
 
 
