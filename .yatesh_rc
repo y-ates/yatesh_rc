@@ -24,12 +24,12 @@ con_htb() {
 
 htb-init() {
 	if [[ $1 ]]; then			
-		mkdir -p /home/y/Documents/HTB/$1/files
-		mkdir -p /home/y/Documents/HTB/$1/exploits
-		mkdir -p /home/y/Documents/HTB/$1/share
-		cd /home/y/Documents/HTB/$1/share
+		mkdir -p /home/y/Documents/HTB/Machines/$1/files
+		mkdir -p /home/y/Documents/HTB/Machines/$1/exploits
+		mkdir -p /home/y/Documents/HTB/Machines/$1/share
+		cd /home/y/Documents/HTB/Machines/$1/share
 		/usr/bin/python3 -m http.server 8080 > /dev/null 2>&1 &
-		echo $! > /home/y/Documents/HTB/$1/.server.pid
+		echo $! > /home/y/Documents/HTB/Machines/$1/.server.pid
 		cd /home/y/Documents/HTB/$1
 		clear
 	else
