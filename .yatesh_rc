@@ -105,3 +105,24 @@ mcd() {
 }
 
 
+# go back several directories by stating the dir name or the amount of dirs to go back
+# Usage: cdb <dirname>	or cdb .. 2
+cdb() {
+    local target_dir="$1"
+    local depth="${2:-1}"
+    
+    # Traverse up the directory tree to the specified depth
+    local current_dir=$(pwd)
+    for ((i=0; i<$depth; i++)); do
+        current_dir=$(dirname "$current_dir")
+    done
+
+    # Find the target directory at or above the specified depth
+    local result=$(find "$current_dir" -maxdepth 1 -type d -name "$target_dir" 2>/dev/null | head -n 1)
+    
+    if [ -n "$result" ]; then
+        cd "$result" || echo "Failed to change to directory: $result"
+    else
+        echo "Directory '$target_dir' not found within $depth levels up"
+    fi
+}
