@@ -41,7 +41,7 @@ htb-init() {
 
 # Usage: nmap-full 10.10.11.169
 nmap-full() {
-        nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1
+        nmap -p- -sC -sV -A --min-rate=400 --min-parallelism=512 -vv $1 -oA $1_nmap
 }
 
 # add ip/domain to /etc/hosts. Usage: addhost <IP> <DOMAIN>
