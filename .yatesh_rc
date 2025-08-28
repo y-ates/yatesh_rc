@@ -19,8 +19,8 @@ rs() {
         curl https://reverse-shell.sh/$1:$2
 }
 
-con_htb() {
-        sudo openvpn /home/y/Documents/HTB/lab_yakate.ovpn
+con-htb() {
+        sudo openvpn /home/yatesh/export/yakate.ovpn
 }
 
 htb-init() {
